@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #0a0a0a;
+  --color-surface: #111113;
+  --color-accent: #8b5cf6;
+  --color-accent-soft: #a78bfa;
+  --color-accent-dim: #5b21b6;
+
+  --font-display: "Orbitron", "Arial Narrow", sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-label: "Rajdhani", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --text-hero: clamp(2rem, 4vw, 3.1rem);
+  --text-hero--line-height: 1.05;
+  --text-section: clamp(1.5rem, 3vw, 2.25rem);
+  --text-section--line-height: 1.15;
+  --text-card-title: clamp(1.125rem, 1.8vw, 1.5rem);
+  --text-card-title--line-height: 1.3;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--letter-spacing: 2px;
+  --text-tagline: 0.9375rem;
+  --text-tagline--letter-spacing: 1.5px;
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+  --text-meta: 0.875rem;
+  --text-cta: 0.8125rem;
+  --text-cta--letter-spacing: 1px;
+
+  --shadow-glow: 0 0 24px 0 rgba(139, 92, 246, 0.35);
+  --shadow-glow-lg: 0 0 48px 0 rgba(139, 92, 246, 0.25);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: #0a0a0a;
+  color: #f4f4f5;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 999px;
+  border: 2px solid #0a0a0a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8b5cf6;
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glow-ring {
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 0 24px 0 rgba(139, 92, 246, 0.35);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+  }
+}
+.animate-pulse-glow {
+  animation: pulseGlow 2.2s ease-out infinite;
+}
+
+@keyframes confirmPop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-confirm-pop {
+  animation: confirmPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes spinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+.animate-spin-reverse {
+  animation: spinReverse 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-pulse-glow,
+  .animate-confirm-pop,
+  .animate-spin-reverse {
+    animation: none;
+  }
+}
