@@ -4,6 +4,12 @@ import { useAuthStore } from "../store/authStore";
 import { useRsvpStore } from "../store/rsvpStore";
 import { EVENT_NAME, EVENT_VENUE, sessions } from "../data/sessions";
 
+// A stable reference for "no RSVPs yet" — returning a fresh `[]` literal
+// from inside a Zustand selector creates a new array every render, which
+// looks like "the state changed" to useSyncExternalStore and causes an
+// infinite render loop.
+const EMPTY_IDS = [];
+
 function hashCode(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -37,10 +43,10 @@ function PassCode({ seed }) {
 export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const attending = useRsvpStore((state) => state.attending);
+  const attendingIds = useRsvpStore((state) => (user ? state.byUser[user._id] || EMPTY_IDS : EMPTY_IDS));
   const navigate = useNavigate();
 
-  const mySessions = sessions.filter((s) => attending.has(s.id));
+  const mySessions = sessions.filter((s) => attendingIds.includes(s.id));
   const ticketId = user?._id ? user._id.slice(-8).toUpperCase() : "PENDING";
 
   const handleLogout = () => {

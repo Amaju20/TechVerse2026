@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check, Circle } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../store/authStore";
+import { getErrorMessage } from "../utils/getErrorMessage";
 import Logo from "../components/Logo";
+import PasswordField, { INPUT_CLASSES } from "../components/PasswordField";
+
+const passwordRules = [
+  { label: "8+ characters", test: (pw) => pw.length >= 8 },
+  { label: "Uppercase and lowercase letter", test: (pw) => /[a-z]/.test(pw) && /[A-Z]/.test(pw) },
+  { label: "At least one number", test: (pw) => /\d/.test(pw) },
+];
 
 export default function Signup() {
   const [formData, setFormData] = useState({ name: "", username: "", email: "", password: "" });
@@ -21,15 +29,17 @@ export default function Signup() {
     e.preventDefault();
     setError("");
     setSubmitting(true);
+    let newUser;
     try {
-      const newUser = await signup(formData.name, formData.username, formData.email, formData.password);
-      toast.success(`Welcome to Techverse, ${newUser.name.split(" ")[0]}!`);
-      navigate("/dashboard");
+      newUser = await signup(formData.name, formData.username, formData.email, formData.password);
     } catch (err) {
-      setError(err.response?.data?.errors?.[0] || err.response?.data?.message || "Something went wrong. Try again.");
-    } finally {
+      setError(getErrorMessage(err));
       setSubmitting(false);
+      return;
     }
+    setSubmitting(false);
+    toast.success(`Welcome to Techverse, ${newUser.name.split(" ")[0]}!`);
+    navigate("/dashboard");
   };
 
   return (
@@ -55,7 +65,7 @@ export default function Signup() {
                 autoComplete="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                className={INPUT_CLASSES}
               />
             </div>
 
@@ -71,7 +81,7 @@ export default function Signup() {
                 autoComplete="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                className={INPUT_CLASSES}
               />
               <p className="text-[11px] text-zinc-500 mt-1.5">
                 3+ characters — letters, numbers, and underscores only.
@@ -89,7 +99,7 @@ export default function Signup() {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                className={INPUT_CLASSES}
               />
             </div>
 
@@ -97,19 +107,33 @@ export default function Signup() {
               <label className="block font-label font-semibold text-eyebrow uppercase text-zinc-500 mb-1.5">
                 Password
               </label>
-              <input
-                type="password"
-                required
-                minLength={8}
+              <PasswordField
                 name="password"
+                minLength={8}
                 autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
               />
-              <p className="text-[11px] text-zinc-500 mt-1.5">
-                8+ characters, with an uppercase letter, a lowercase letter, and a number.
-              </p>
+              <ul className="mt-2 flex flex-col gap-1">
+                {passwordRules.map(({ label, test }) => {
+                  const met = test(formData.password);
+                  return (
+                    <li
+                      key={label}
+                      className={`flex items-center gap-1.5 text-[11px] transition-colors ${
+                        met ? "text-accent-soft" : "text-zinc-500"
+                      }`}
+                    >
+                      {met ? (
+                        <Check size={12} aria-hidden="true" />
+                      ) : (
+                        <Circle size={12} aria-hidden="true" />
+                      )}
+                      {label}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
             {error && <p className="text-xs text-red-400">{error}</p>}
@@ -117,7 +141,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 w-full bg-accent hover:bg-accent-soft disabled:opacity-50 text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow transition-colors flex items-center justify-center gap-2"
+              className="mt-2 w-full bg-accent hover:bg-accent-soft disabled:opacity-50 text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow focus-visible:shadow-glow-lg transition-all flex items-center justify-center gap-2"
             >
               {submitting && <Loader2 size={15} className="animate-spin" aria-hidden="true" />}
               {submitting ? "Creating account..." : "Sign up"}

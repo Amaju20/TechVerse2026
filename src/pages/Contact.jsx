@@ -79,7 +79,7 @@ export default function Contact() {
 
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="mt-8 inline-flex items-center gap-2 font-label font-semibold text-cta uppercase text-white bg-accent hover:bg-accent-soft px-5 py-2.5 rounded-full shadow-glow transition-colors w-fit"
+              className="mt-8 inline-flex items-center gap-2 font-label font-semibold text-cta uppercase text-white bg-accent hover:bg-accent-soft focus-visible:shadow-glow-lg px-5 py-2.5 rounded-full shadow-glow transition-all w-fit"
             >
               <Mail size={15} aria-hidden="true" />
               {CONTACT_EMAIL}
@@ -112,7 +112,7 @@ export default function Contact() {
                     key={id}
                     type="button"
                     onClick={() => selectCategory(id)}
-                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border font-label font-medium text-tagline uppercase transition-all active:scale-[0.97] ${
+                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border font-label font-medium text-tagline uppercase transition-all active:scale-[0.97] focus-visible:shadow-glow ${
                       formData.category === id
                         ? "bg-accent/15 border-accent/50 text-accent-soft"
                         : "border-white/10 text-zinc-400 hover:border-white/25 hover:text-white"
@@ -137,7 +137,7 @@ export default function Contact() {
                   autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent focus:shadow-glow transition-all"
                 />
               </div>
               {errors.name && <p className="text-xs text-red-400 mt-1.5">{errors.name}</p>}
@@ -155,7 +155,7 @@ export default function Contact() {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent focus:shadow-glow transition-all"
                 />
               </div>
               {errors.email && <p className="text-xs text-red-400 mt-1.5">{errors.email}</p>}
@@ -172,7 +172,7 @@ export default function Contact() {
                   rows={4}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-white outline-none focus:border-accent focus:shadow-glow transition-all resize-none"
                 />
               </div>
               {errors.message && <p className="text-xs text-red-400 mt-1.5">{errors.message}</p>}
@@ -180,7 +180,7 @@ export default function Contact() {
 
             <button
               type="submit"
-              className="mt-1 w-full bg-accent hover:bg-accent-soft text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              className="mt-1 w-full bg-accent hover:bg-accent-soft text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow focus-visible:shadow-glow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
               <Send size={15} aria-hidden="true" />
               Send message

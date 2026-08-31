@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../store/authStore";
+import { getErrorMessage } from "../utils/getErrorMessage";
 import Logo from "../components/Logo";
+import PasswordField, { INPUT_CLASSES } from "../components/PasswordField";
 
 export default function Login() {
   const [formData, setFormData] = useState({ identifier: "", password: "" });
@@ -21,15 +23,17 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setSubmitting(true);
+    let loggedInUser;
     try {
-      const loggedInUser = await login(formData.identifier, formData.password);
-      toast.success(`Welcome back, ${loggedInUser.name.split(" ")[0]}!`);
-      navigate("/dashboard");
+      loggedInUser = await login(formData.identifier, formData.password);
     } catch (err) {
-      setError(err.response?.data?.errors?.[0] || err.response?.data?.message || "Something went wrong. Try again.");
-    } finally {
+      setError(getErrorMessage(err));
       setSubmitting(false);
+      return;
     }
+    setSubmitting(false);
+    toast.success(`Welcome back, ${loggedInUser.name.split(" ")[0]}!`);
+    navigate("/dashboard");
   };
 
   return (
@@ -55,7 +59,7 @@ export default function Login() {
                 autoComplete="username"
                 value={formData.identifier}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
+                className={INPUT_CLASSES}
               />
             </div>
 
@@ -63,14 +67,11 @@ export default function Login() {
               <label className="block font-label font-semibold text-eyebrow uppercase text-zinc-500 mb-1.5">
                 Password
               </label>
-              <input
-                type="password"
-                required
+              <PasswordField
                 name="password"
                 autoComplete="current-password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white outline-none focus:border-accent transition-colors"
               />
             </div>
 
@@ -79,7 +80,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 w-full bg-accent hover:bg-accent-soft disabled:opacity-50 text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow transition-colors flex items-center justify-center gap-2"
+              className="mt-2 w-full bg-accent hover:bg-accent-soft disabled:opacity-50 text-white font-label font-semibold text-cta uppercase py-3 rounded-lg shadow-glow focus-visible:shadow-glow-lg transition-all flex items-center justify-center gap-2"
             >
               {submitting && <Loader2 size={15} className="animate-spin" aria-hidden="true" />}
               {submitting ? "Logging in..." : "Log in"}

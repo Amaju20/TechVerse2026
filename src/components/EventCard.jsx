@@ -14,7 +14,7 @@ const trackColor = {
 
 export default function EventCard({ session, index = 0 }) {
   const user = useAuthStore((state) => state.user);
-  const attending = useRsvpStore((state) => state.attending.has(session.id));
+  const attending = useRsvpStore((state) => Boolean(user) && (state.byUser[user._id] || []).includes(session.id));
   const toggleRsvp = useRsvpStore((state) => state.toggleRsvp);
   const navigate = useNavigate();
   const [justConfirmed, setJustConfirmed] = useState(false);
@@ -29,7 +29,7 @@ export default function EventCard({ session, index = 0 }) {
       return;
     }
     const wasAttending = attending;
-    toggleRsvp(session.id);
+    toggleRsvp(user._id, session.id);
     if (wasAttending) {
       toast.info(`Removed "${session.title}" from your schedule`);
     } else {
@@ -80,7 +80,7 @@ export default function EventCard({ session, index = 0 }) {
 
       <button
         onClick={handleRsvp}
-        className={`mt-2 w-full rounded-xl py-2.5 font-label font-semibold text-cta uppercase transition-all active:scale-[0.97] flex items-center justify-center gap-2 ${
+        className={`mt-2 w-full rounded-xl py-2.5 font-label font-semibold text-cta uppercase transition-all active:scale-[0.97] focus-visible:shadow-glow-lg flex items-center justify-center gap-2 ${
           justConfirmed ? "animate-confirm-pop" : ""
         } ${
           attending

@@ -21,7 +21,7 @@ export default function ScheduleGrid() {
             <button
               key={t}
               onClick={() => setFilter(t)}
-              className={`px-3.5 py-1.5 rounded-full font-label font-semibold text-cta uppercase border transition-all active:scale-[0.95] ${
+              className={`px-3.5 py-1.5 rounded-full font-label font-semibold text-cta uppercase border transition-all active:scale-[0.95] focus-visible:shadow-glow ${
                 filter === t
                   ? "bg-accent text-white border-accent"
                   : "border-white/10 text-zinc-400 hover:border-white/25 hover:text-white"

@@ -266,22 +266,33 @@ export default function TechCircuitBackground() {
     let traces = [];
     let icons = [];
     let animationId = null;
+    let resizeTimeout = null;
     let start = performance.now();
 
-    function drawStaticGrid() {
-      ctx.strokeStyle = `rgba(${BLUE}, 0.07)`;
-      ctx.lineWidth = 1;
+    // The grid never changes between frames, only between resizes — draw it
+    // once to an offscreen canvas and blit that each frame instead of
+    // re-stroking every grid line ~60 times a second.
+    const gridCanvas = document.createElement("canvas");
+    const gridCtx = gridCanvas.getContext("2d");
+
+    function buildStaticGrid(dpr) {
+      gridCanvas.width = width * dpr;
+      gridCanvas.height = height * dpr;
+      gridCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      gridCtx.clearRect(0, 0, width, height);
+      gridCtx.strokeStyle = `rgba(${BLUE}, 0.07)`;
+      gridCtx.lineWidth = 1;
       for (let x = 0; x <= width; x += GRID) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
+        gridCtx.beginPath();
+        gridCtx.moveTo(x, 0);
+        gridCtx.lineTo(x, height);
+        gridCtx.stroke();
       }
       for (let y = 0; y <= height; y += GRID) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
+        gridCtx.beginPath();
+        gridCtx.moveTo(0, y);
+        gridCtx.lineTo(width, y);
+        gridCtx.stroke();
       }
     }
 
@@ -359,7 +370,7 @@ export default function TechCircuitBackground() {
     function render(elapsed) {
       ctx.fillStyle = BG_COLOR;
       ctx.fillRect(0, 0, width, height);
-      drawStaticGrid();
+      ctx.drawImage(gridCanvas, 0, 0, width, height);
       drawTraces();
       drawIcons(elapsed);
     }
@@ -370,7 +381,7 @@ export default function TechCircuitBackground() {
       animationId = requestAnimationFrame(frame);
     }
 
-    function resize() {
+    function performResize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -379,20 +390,30 @@ export default function TechCircuitBackground() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildStaticGrid(dpr);
       traces = buildTraces(width, height);
       icons = buildIcons(width, height);
       render(0);
     }
 
-    resize();
-    window.addEventListener("resize", resize);
+    // Debounce actual rebuilds so a window drag or a mobile browser's chrome
+    // collapsing (both fire many resize events in quick succession) doesn't
+    // regenerate every trace/icon layout on each individual event.
+    function handleResize() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(performResize, 150);
+    }
+
+    performResize();
+    window.addEventListener("resize", handleResize);
 
     if (!prefersReducedMotion) {
       animationId = requestAnimationFrame(frame);
     }
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
       if (animationId) cancelAnimationFrame(animationId);
     };
   }, []);
