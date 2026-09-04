@@ -1,5 +1,6 @@
 import { Mail } from "lucide-react";
-import { EVENT_NAME, EVENT_VENUE } from "../data/sessions";
+import { EVENT_NAME, EVENT_VENUE_NAME, EVENT_VENUE_ADDRESS, EVENT_MAPS_URL } from "../data/sessions";
+import VenueLink from "../components/VenueLink";
 
 const values = [
   {
@@ -8,7 +9,7 @@ const values = [
   },
   {
     title: "No sales tracks",
-    body: "Every session is taught by someone who ships the thing they're talking about — not a vendor pitch in disguise.",
+    body: "Every session is taught by someone who ships the thing they're talking about, not a vendor pitch in disguise.",
   },
   {
     title: "One track at a time",
@@ -27,7 +28,7 @@ export default function About() {
         <p className="mt-8 max-w-2xl text-zinc-400 font-sans text-body">
           {EVENT_NAME} started as a dinner conversation between five people tired of conferences that felt
           like trade shows. Two years later it's grown into two days of workshops covering design,
-          engineering, and the economics of running a small studio — deliberately kept small enough that
+          engineering, and the economics of running a small studio deliberately kept small enough that
           you leave knowing people, not just business cards.
         </p>
 
@@ -43,14 +44,14 @@ export default function About() {
         <div className="glass rounded-2xl p-8 mt-14 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
             <p className="font-label font-semibold text-eyebrow uppercase text-accent-soft mb-2">Venue</p>
-            <p className="text-white font-medium">{EVENT_VENUE}</p>
+            <VenueLink name={EVENT_VENUE_NAME} address={EVENT_VENUE_ADDRESS} mapsUrl={EVENT_MAPS_URL} />
           </div>
           <a
-            href="mailto:johnsonamaju@gmail.com"
+            href="mailto:hello@Techverse2026.com"
             className="inline-flex items-center gap-2 font-sans text-meta font-medium text-white bg-accent hover:bg-accent-soft px-5 py-2.5 rounded-full shadow-glow transition-colors w-fit"
           >
             <Mail size={15} aria-hidden="true" />
-            johnsonamaju@gmail.com
+            hello@Techverse2026.com
           </a>
         </div>
       </main>

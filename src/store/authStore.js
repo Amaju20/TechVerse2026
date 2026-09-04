@@ -44,4 +44,14 @@ export const useAuthStore = create((set) => ({
     set({ user: null });
     toast.info("Logged out");
   },
+
+  updateProfile: async (name) => {
+    const res = await axiosInstance.patch("/auth/profile", { name });
+    set({ user: res.data.user });
+    return res.data.user;
+  },
+
+  changePassword: async (currentPassword, newPassword) => {
+    await axiosInstance.patch("/auth/password", { currentPassword, newPassword });
+  },
 }));

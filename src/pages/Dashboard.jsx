@@ -1,8 +1,11 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogOut, Clock, MapPin, CalendarX } from "lucide-react";
+import { LogOut, Clock, MapPin, CalendarX, CalendarPlus } from "lucide-react";
+import QRCode from "qrcode";
 import { useAuthStore } from "../store/authStore";
 import { useRsvpStore } from "../store/rsvpStore";
 import { EVENT_NAME, EVENT_VENUE, sessions } from "../data/sessions";
+import { getGoogleCalendarUrl } from "../utils/calendar";
 
 // A stable reference for "no RSVPs yet" — returning a fresh `[]` literal
 // from inside a Zustand selector creates a new array every render, which
@@ -10,34 +13,19 @@ import { EVENT_NAME, EVENT_VENUE, sessions } from "../data/sessions";
 // infinite render loop.
 const EMPTY_IDS = [];
 
-function hashCode(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return hash;
-}
+function TicketQrCode({ value }) {
+  const canvasRef = useRef(null);
 
-function PassCode({ seed }) {
-  const size = 7;
-  const cells = [];
-  for (let i = 0; i < size * size; i++) {
-    const on = Math.abs(hashCode(`${seed}-${i}`)) % 5 < 2;
-    cells.push(on);
-  }
-  return (
-    <div
-      className="grid gap-[3px] w-24 h-24 shrink-0"
-      style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}
-      role="img"
-      aria-label="Digital pass code"
-    >
-      {cells.map((on, i) => (
-        <div key={i} className={on ? "bg-void" : "bg-transparent"} />
-      ))}
-    </div>
-  );
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    QRCode.toCanvas(canvasRef.current, value, {
+      width: 96,
+      margin: 0,
+      color: { dark: "#0a0a0a", light: "#ffffff" },
+    }).catch(() => {});
+  }, [value]);
+
+  return <canvas ref={canvasRef} role="img" aria-label="Digital pass QR code" className="w-24 h-24 shrink-0" />;
 }
 
 export default function Dashboard() {
@@ -48,6 +36,7 @@ export default function Dashboard() {
 
   const mySessions = sessions.filter((s) => attendingIds.includes(s.id));
   const ticketId = user?._id ? user._id.slice(-8).toUpperCase() : "PENDING";
+  const qrValue = `${EVENT_NAME} — Ticket #${ticketId} — ${user?.name || ""}`;
 
   const handleLogout = () => {
     logout();
@@ -81,7 +70,7 @@ export default function Dashboard() {
               <p className="font-sans text-meta text-zinc-500 mt-1">@{user?.username} · {user?.email}</p>
             </div>
             <div className="bg-white rounded-xl p-3">
-              <PassCode seed={user?._id || user?.email || "guest"} />
+              <TicketQrCode value={qrValue} />
             </div>
           </div>
           <div className="relative border-t border-dashed border-white/15">
@@ -129,6 +118,16 @@ export default function Dashboard() {
                     <MapPin size={13} aria-hidden="true" />
                     {s.room}
                   </span>
+                  <a
+                    href={getGoogleCalendarUrl(s)}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Add "${s.title}" to Google Calendar`}
+                    className="flex items-center gap-1.5 text-accent-soft hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-soft focus-visible:outline-offset-2 focus-visible:rounded-sm transition-colors"
+                  >
+                    <CalendarPlus size={13} aria-hidden="true" />
+                    Add to calendar
+                  </a>
                 </div>
               </div>
             ))}

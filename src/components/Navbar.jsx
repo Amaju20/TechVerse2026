@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X, Settings as SettingsIcon } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import Logo from "./Logo";
 
@@ -49,6 +49,13 @@ export default function Navbar() {
                   className="font-label font-semibold text-cta uppercase text-white bg-white/5 border border-white/10 px-4 py-2 rounded-full hover:border-white/25 focus-visible:shadow-glow transition-all"
                 >
                   My dashboard
+                </Link>
+                <Link
+                  to="/settings"
+                  aria-label="Settings"
+                  className="text-zinc-500 hover:text-white transition-colors"
+                >
+                  <SettingsIcon size={17} aria-hidden="true" />
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -101,6 +108,14 @@ export default function Navbar() {
                   className="font-label font-semibold text-cta uppercase text-white bg-white/5 border border-white/10 px-4 py-2.5 rounded-full text-center hover:border-white/25 transition-all"
                 >
                   My dashboard
+                </Link>
+                <Link
+                  to="/settings"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 font-label font-medium text-zinc-400 hover:text-white transition-colors"
+                >
+                  <SettingsIcon size={16} aria-hidden="true" />
+                  Settings
                 </Link>
                 <button
                   onClick={handleLogout}

@@ -12,9 +12,9 @@ import {
   Newspaper,
   Mic,
 } from "lucide-react";
-import { EVENT_VENUE } from "../data/sessions";
+import { EVENT_VENUE, EVENT_MAPS_URL } from "../data/sessions";
 
-const CONTACT_EMAIL = "johnsonamaju@gmail.com";
+const CONTACT_EMAIL = "hello@Techverse2026.com";
 
 const categories = [
   { id: "general", label: "General", icon: MessageCircle },
@@ -90,10 +90,16 @@ export default function Contact() {
                 <Clock size={16} className="text-accent-soft shrink-0" aria-hidden="true" />
                 We typically reply within 2 business days.
               </div>
-              <div className="flex items-center gap-3 font-sans text-meta text-zinc-400">
+              <a
+                href={EVENT_MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${EVENT_VENUE} on Google Maps`}
+                className="flex items-center gap-3 font-sans text-meta text-zinc-400 hover:text-white transition-colors w-fit"
+              >
                 <MapPin size={16} className="text-accent-soft shrink-0" aria-hidden="true" />
                 {EVENT_VENUE}
-              </div>
+              </a>
             </div>
           </div>
 
