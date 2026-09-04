@@ -14,7 +14,7 @@ const trackColor = {
 
 export default function EventCard({ session, index = 0 }) {
   const user = useAuthStore((state) => state.user);
-  const attending = useRsvpStore((state) => Boolean(user) && (state.byUser[user._id] || []).includes(session.id));
+  const attending = useRsvpStore((state) => state.ids.includes(session.id));
   const toggleRsvp = useRsvpStore((state) => state.toggleRsvp);
   const navigate = useNavigate();
   const [justConfirmed, setJustConfirmed] = useState(false);
@@ -29,7 +29,7 @@ export default function EventCard({ session, index = 0 }) {
       return;
     }
     const wasAttending = attending;
-    toggleRsvp(user._id, session.id);
+    toggleRsvp(session.id);
     if (wasAttending) {
       toast.info(`Removed "${session.title}" from your schedule`);
     } else {

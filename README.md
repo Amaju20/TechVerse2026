@@ -1,16 +1,63 @@
-# React + Vite
+# Techverse 2026 — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The client for [Techverse 2026](https://github.com/Amaju20/Backendserver4Project), a two-day
+conference RSVP site: browse the schedule, RSVP to sessions, get a digital pass with a real
+scannable QR code, add sessions to Google Calendar, and manage your account — all backed by a real
+Express/MongoDB API, not mocked data.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React 19 + Vite, Tailwind CSS v4 (`@theme` token system), Zustand for state, React Router v7,
+Axios (httpOnly-cookie auth), `react-toastify`, `lucide-react`, `qrcode`.
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+cp .env.example .env    # point VITE_API_URL at your backend
+npm run dev
+```
 
-## Expanding the ESLint configuration
+This expects the [backend](https://github.com/Amaju20/Backendserver4Project) running and
+`CLIENT_URL` on the backend matching this app's dev URL, for CORS.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Scripts
+
+| Command           | Does                                  |
+| ------------------ | -------------------------------------- |
+| `npm run dev`      | Start the Vite dev server              |
+| `npm run build`    | Production build to `dist/`            |
+| `npm run preview`  | Preview the production build locally   |
+| `npm run lint`     | ESLint                                 |
+| `npm test`         | Run the test suite (Vitest)            |
+
+## Structure
+
+```
+src/
+  api/axios.js        Axios instance (httpOnly-cookie auth, withCredentials)
+  store/               Zustand stores — authStore (session), rsvpStore (RSVP state, backend-persisted)
+  pages/               Route-level views (Home, About, Contact, Login, Signup, Dashboard, Settings, NotFound)
+  components/          Shared UI (Navbar, Footer, EventCard, VenueLink, TechCircuitBackground, ...)
+  data/sessions.js     Static conference schedule + event/venue constants
+  utils/               calendar.js (Google Calendar URL builder), getErrorMessage.js
+```
+
+## Key flows
+
+- **Auth**: `authStore.js` talks to `/api/auth/*`, session lives in an httpOnly cookie (no tokens in
+  localStorage). `loadUser()` runs once on app mount to restore a session on refresh.
+- **RSVPs**: `rsvpStore.js` talks to `/api/rsvps` — RSVPs are persisted per-user in the real
+  database, not localStorage. Toggling is optimistic (the UI updates immediately, then rolls back
+  if the request fails).
+- **Digital pass**: the Dashboard renders a real QR code (`qrcode` package, drawn to a `<canvas>`)
+  encoding the user's ticket info, plus a Google Calendar link per RSVP'd session.
+
+## Tests
+
+```bash
+npm test
+```
+
+Vitest + React Testing Library. Covers the RSVP store (optimistic updates and rollback), the
+Google Calendar URL builder, and the RSVP button's states/behavior on `EventCard`.

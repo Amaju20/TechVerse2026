@@ -7,12 +7,6 @@ import { useRsvpStore } from "../store/rsvpStore";
 import { EVENT_NAME, EVENT_VENUE, sessions } from "../data/sessions";
 import { getGoogleCalendarUrl } from "../utils/calendar";
 
-// A stable reference for "no RSVPs yet" — returning a fresh `[]` literal
-// from inside a Zustand selector creates a new array every render, which
-// looks like "the state changed" to useSyncExternalStore and causes an
-// infinite render loop.
-const EMPTY_IDS = [];
-
 function TicketQrCode({ value }) {
   const canvasRef = useRef(null);
 
@@ -31,7 +25,7 @@ function TicketQrCode({ value }) {
 export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const attendingIds = useRsvpStore((state) => (user ? state.byUser[user._id] || EMPTY_IDS : EMPTY_IDS));
+  const attendingIds = useRsvpStore((state) => state.ids);
   const navigate = useNavigate();
 
   const mySessions = sessions.filter((s) => attendingIds.includes(s.id));
