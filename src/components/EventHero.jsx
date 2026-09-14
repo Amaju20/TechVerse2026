@@ -55,7 +55,7 @@ export default function EventHero() {
           className="animate-fade-up mt-6 max-w-xl text-zinc-400 font-sans text-body"
           style={{ animationDelay: "0.12s" }}
         >
-          Two days of workshops and talks for people who ship things ,design, engineering, and the business
+          Two days of workshops and talks for people who ship things — design, engineering, and the business
           of small studios.
         </p>
 

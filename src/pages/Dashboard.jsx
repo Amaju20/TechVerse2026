@@ -26,6 +26,7 @@ export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const attendingIds = useRsvpStore((state) => state.ids);
+  const rsvpsLoaded = useRsvpStore((state) => state.loaded);
   const navigate = useNavigate();
 
   const mySessions = sessions.filter((s) => attendingIds.includes(s.id));
@@ -71,7 +72,7 @@ export default function Dashboard() {
             <div className="absolute -top-3 -left-3 w-6 h-6 rounded-full bg-void border border-white/10" />
             <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-void border border-white/10" />
           </div>
-          <div className="px-7 py-5 flex items-center justify-between text-xs font-mono text-zinc-500">
+          <div className="px-7 py-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs font-mono text-zinc-500">
             <span>{EVENT_NAME}</span>
             <span>{EVENT_VENUE}</span>
             <span className="text-accent-soft tracking-widest">#{ticketId}</span>
@@ -79,10 +80,16 @@ export default function Dashboard() {
         </div>
 
         <p className="font-label font-semibold text-eyebrow uppercase text-accent-soft mb-4">
-          Your sessions ({mySessions.length})
+          Your sessions {rsvpsLoaded ? `(${mySessions.length})` : ""}
         </p>
 
-        {mySessions.length === 0 ? (
+        {!rsvpsLoaded ? (
+          <div className="glass rounded-2xl p-10 flex items-center justify-center">
+            <div className="relative w-8 h-8">
+              <div className="absolute inset-0 rounded-full border-2 border-white/10 border-t-accent animate-spin" />
+            </div>
+          </div>
+        ) : mySessions.length === 0 ? (
           <div className="glass rounded-2xl p-10 flex flex-col items-center text-center gap-3">
             <CalendarX size={28} className="text-zinc-600" aria-hidden="true" />
             <p className="text-white font-medium">No RSVPs yet</p>
