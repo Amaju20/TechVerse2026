@@ -10,7 +10,7 @@ export const sessions = [
   {
     id: "sess-01",
     title: "Designing at the edge of the stack",
-    speaker: "Edema-ofoni Britney",
+    speaker: "Edema-Ofoni Britney",
     role: "Principal Designer, Vercel",
     track: "Design",
     date: "Oct 14",
