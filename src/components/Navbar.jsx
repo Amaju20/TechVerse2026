@@ -5,7 +5,7 @@ import { useAuthStore } from "../store/authStore";
 import Logo from "./Logo";
 
 const navLinks = [
-  { to: "/#schedule", label: "Schedule" },
+  { to: "/schedule", label: "Schedule" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];

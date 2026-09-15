@@ -10,7 +10,7 @@ export default function ScheduleGrid() {
   const visible = filter === "All" ? sessions : sessions.filter((s) => s.track === filter);
 
   return (
-    <section id="schedule" className="max-w-6xl mx-auto px-6 py-24">
+    <section className="max-w-6xl mx-auto px-6 pt-40 pb-24">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
         <div>
           <p className="font-label font-semibold text-eyebrow uppercase text-accent-soft mb-2">Schedule</p>

@@ -74,7 +74,7 @@ export default function EventHero() {
         </div>
 
         <Link
-          to="#schedule"
+          to="/schedule"
           className="animate-fade-up animate-pulse-glow mt-12 inline-flex items-center gap-2 bg-accent hover:bg-accent-soft focus-visible:shadow-glow-lg text-white font-label font-semibold text-cta uppercase px-7 py-3.5 rounded-full transition-all"
           style={{ animationDelay: "0.28s" }}
         >

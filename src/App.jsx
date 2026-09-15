@@ -6,6 +6,7 @@ import { useAuthStore } from "./store/authStore";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TechCircuitBackground from "./components/TechCircuitBackground";
 import Home from "./pages/Home";
+import Schedule from "./pages/Schedule";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
@@ -29,6 +30,7 @@ export default function App() {
         <Navbar/>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/schedule" element={<Schedule />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />

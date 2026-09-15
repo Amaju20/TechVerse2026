@@ -43,7 +43,7 @@ export default function Footer() {
         <div className="flex flex-col gap-4">
           <Logo variant="dark" />
           <div className="flex items-center gap-4 font-label font-medium text-cta uppercase text-zinc-400">
-            <Link to="/#schedule" className="hover:text-white transition-colors">
+            <Link to="/schedule" className="hover:text-white transition-colors">
               Schedule
             </Link>
             <Link to="/about" className="hover:text-white transition-colors">
