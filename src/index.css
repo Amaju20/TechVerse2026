@@ -66,6 +66,17 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  /* Used for the mobile nav drawer, which overlays page content it must
+     fully obscure. backdrop-filter silently fails on some browsers/devices
+     (older Safari, reduced-transparency settings, some Android WebViews),
+     and .glass's 5% tint alone isn't remotely opaque enough on its own —
+     so this doesn't depend on blur succeeding to stay legible. */
+  .glass-nav {
+    background: rgba(10, 10, 10, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
   .glow-ring {
     box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 0 24px 0 rgba(139, 92, 246, 0.35);
   }

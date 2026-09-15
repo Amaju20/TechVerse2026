@@ -87,7 +87,7 @@ export default function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="sm:hidden glass border-t border-white/5 px-6 py-5 flex flex-col gap-4">
+        <div className="sm:hidden glass-nav border-t border-white/5 px-6 py-5 flex flex-col gap-4">
           {navLinks.map((link) => (
             <Link
               key={link.to}
